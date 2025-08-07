@@ -6,11 +6,13 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +29,14 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                ->rules(['required', 'min:10'])
+                ->label('Nome')
+                ->placeholder('Nome do usuário')
+                ->validationMessages([
+                    'required' => 'O nome é obrigatorio',
+                    'min' => 'O nome deve ter no minimo 10 caracteres'
+                ])
             ]);
     }
 
@@ -39,6 +48,10 @@ class UserResource extends Resource
                 ->label('Nome')
                 ->sortable()
                 ->searchable(),
+
+                ImageColumn::make('avatar')
+                ->label('Avatar')
+                ->circular(),
 
                 TextColumn::make('email')
                 ->label('Email')
