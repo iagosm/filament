@@ -9,6 +9,8 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,6 +44,23 @@ class UserResource extends Resource
                 ->label('Email')
                 ->searchable(),
 
+                 IconColumn::make('is_admin')
+                 ->label('Admin?')
+                 ->boolean()
+                //  ->icon(function($state) {
+                //     return $state =='1' ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
+                //  })
+                //  ->color(function($state) {
+                //     return $state =='1' ? 'success' : 'danger';
+                //  })
+                 ->sortable(),
+
+                TextColumn::make('phone')
+                ->label('Telefone')
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault:true),
+
+
                 TextColumn::make('created_at')
                 ->label('Criado em')
                 ->toggleable(isToggledHiddenByDefault:true)
@@ -56,8 +75,10 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
