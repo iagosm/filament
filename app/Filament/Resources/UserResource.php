@@ -6,7 +6,9 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -33,10 +35,40 @@ class UserResource extends Resource
                 ->rules(['required', 'min:10'])
                 ->label('Nome')
                 ->placeholder('Nome do usuário')
-                ->validationMessages([
-                    'required' => 'O nome é obrigatorio',
-                    'min' => 'O nome deve ter no minimo 10 caracteres'
-                ])
+                ->required(),
+
+                TextInput::make('email')
+                ->rules(['required'])
+                ->unique(ignoreRecord:true)
+                ->email()
+                ->placeholder('Email')
+                ->required(),
+
+                TextInput::make('password')
+                ->label('Senha')
+                ->rules(['required'])
+                ->password()
+                ->placeholder('Digite sua senha')
+                ->required()
+                ->visibleOn(['create']),
+
+                TextInput::make('phone')
+                ->label('Telefone')
+                ->mask('(99) 99999-9999')
+                ->placeholder('(__) _____-____')
+                ->required(),
+
+                FileUpload::make('avatar')
+                ->label('Avatar')
+                ->directory('avatars')
+                ->imageEditor()
+                ->circleCropper()
+                ->preserveFilenames()
+                ->image(),
+
+                 Toggle::make('is_admin')
+                ->label('Admin'),
+
             ]);
     }
 
