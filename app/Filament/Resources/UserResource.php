@@ -27,6 +27,7 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $modelLabel = 'Usuário';
 
+
     public static function form(Form $form): Form
     {
         return $form
@@ -61,10 +62,11 @@ class UserResource extends Resource
                 FileUpload::make('avatar')
                 ->label('Avatar')
                 ->directory('avatars')
-                ->imageEditor()
-                ->circleCropper()
-                ->preserveFilenames()
-                ->image(),
+                ->avatar(),
+                // ->imageEditor()
+                // ->circleCropper()
+                // ->preserveFilenames()
+                // ->image(),
 
                  Toggle::make('is_admin')
                 ->label('Admin'),
@@ -146,5 +148,10 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
     }
 }

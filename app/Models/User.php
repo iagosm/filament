@@ -3,11 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -62,5 +66,23 @@ class User extends Authenticatable
     public function replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return (bool)$this->is_admin;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        if (! $this->avatar) {
+            return null; // ou url default se quiser
+        }
+        return asset('storage/' . $this->avatar);
+    }
+
+    public function getFilamentName(): string
+    {
+        return "{$this->name} || {$this->email}";
     }
 }
